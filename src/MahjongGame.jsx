@@ -1,26 +1,26 @@
-import { useState, useCallback, useEffect, useRef } from “react”;
+import { useState, useCallback, useEffect, useRef } from "react";
 
 // ─── Tile Data ───
 const SUITS = [
-{ key: “wan”, cn: “萬”, en: “Characters”, color: “#c0392b” },
-{ key: “tong”, cn: “筒”, en: “Dots”, color: “#2874a6” },
-{ key: “tiao”, cn: “條”, en: “Bamboo”, color: “#1e8449” },
+{ key: "wan", cn: "萬", en: "Characters", color: "#c0392b" },
+{ key: "tong", cn: "筒", en: "Dots", color: "#2874a6" },
+{ key: "tiao", cn: "條", en: "Bamboo", color: "#1e8449" },
 ];
 const RANKS = [
-{ n: 1, cn: “一” }, { n: 2, cn: “二” }, { n: 3, cn: “三” },
-{ n: 4, cn: “四” }, { n: 5, cn: “五” }, { n: 6, cn: “六” },
-{ n: 7, cn: “七” }, { n: 8, cn: “八” }, { n: 9, cn: “九” },
+{ n: 1, cn: "一" }, { n: 2, cn: "二" }, { n: 3, cn: "三" },
+{ n: 4, cn: "四" }, { n: 5, cn: "五" }, { n: 6, cn: "六" },
+{ n: 7, cn: "七" }, { n: 8, cn: "八" }, { n: 9, cn: "九" },
 ];
 const WINDS = [
-{ key: “east”, cn: “東”, en: “East”, abbr: “E” },
-{ key: “south”, cn: “南”, en: “South”, abbr: “S” },
-{ key: “west”, cn: “西”, en: “West”, abbr: “W” },
-{ key: “north”, cn: “北”, en: “North”, abbr: “N” },
+{ key: "east", cn: "東", en: "East", abbr: "E" },
+{ key: "south", cn: "南", en: "South", abbr: "S" },
+{ key: "west", cn: "西", en: "West", abbr: "W" },
+{ key: "north", cn: "北", en: "North", abbr: "N" },
 ];
 const DRAGONS = [
-{ key: “red”, cn: “中”, en: “Red”, color: “#c0392b”, abbr: “Red” },
-{ key: “green”, cn: “發”, en: “Green”, color: “#1e8449”, abbr: “Grn” },
-{ key: “white”, cn: “白”, en: “White”, color: “#555”, abbr: “Wht” },
+{ key: "red", cn: "中", en: "Red", color: "#c0392b", abbr: "Red" },
+{ key: "green", cn: "發", en: "Green", color: "#1e8449", abbr: "Grn" },
+{ key: "white", cn: "白", en: "White", color: "#555", abbr: "Wht" },
 ];
 
 function buildDeck() {
@@ -29,20 +29,20 @@ let id = 0;
 for (const suit of SUITS) {
 for (const rank of RANKS) {
 for (let c = 0; c < 4; c++) {
-tiles.push({ id: id++, type: “suit”, suit: suit.key, rank: rank.n,
+tiles.push({ id: id++, type: "suit", suit: suit.key, rank: rank.n,
 cn: `${rank.cn}${suit.cn}`, en: `${rank.n} ${suit.en}`, color: suit.color });
 }
 }
 }
 for (const w of WINDS) {
 for (let c = 0; c < 4; c++) {
-tiles.push({ id: id++, type: “wind”, suit: “wind”, rank: w.key,
-cn: w.cn, en: `${w.en} Wind`, color: “#5b2c6f”, abbr: w.abbr });
+tiles.push({ id: id++, type: "wind", suit: "wind", rank: w.key,
+cn: w.cn, en: `${w.en} Wind`, color: "#5b2c6f", abbr: w.abbr });
 }
 }
 for (const d of DRAGONS) {
 for (let c = 0; c < 4; c++) {
-tiles.push({ id: id++, type: “dragon”, suit: “dragon”, rank: d.key,
+tiles.push({ id: id++, type: "dragon", suit: "dragon", rank: d.key,
 cn: d.cn, en: `${d.en} Dragon`, color: d.color, abbr: d.abbr });
 }
 }
@@ -57,8 +57,8 @@ const wo = { east: 0, south: 1, west: 2, north: 3 };
 const dr = { red: 0, green: 1, white: 2 };
 return […hand].sort((a, b) => {
 if (so[a.suit] !== so[b.suit]) return so[a.suit] - so[b.suit];
-if (a.suit === “wind”) return (wo[a.rank]||0) - (wo[b.rank]||0);
-if (a.suit === “dragon”) return (dr[a.rank]||0) - (dr[b.rank]||0);
+if (a.suit === "wind") return (wo[a.rank]||0) - (wo[b.rank]||0);
+if (a.suit === "dragon") return (dr[a.rank]||0) - (dr[b.rank]||0);
 return a.rank - b.rank;
 });
 }
@@ -67,7 +67,7 @@ function botDiscard(hand) {
 const counts = {};
 hand.forEach(t => { const k=`${t.suit}-${t.rank}`; counts[k]=(counts[k]||0)+1; });
 const isolated = hand.filter(t => counts[`${t.suit}-${t.rank}`] === 1);
-const hi = isolated.filter(t => t.type !== “suit”);
+const hi = isolated.filter(t => t.type !== "suit");
 if (hi.length) return hi[Math.floor(Math.random()*hi.length)];
 if (isolated.length) return isolated[Math.floor(Math.random()*isolated.length)];
 return hand[Math.floor(Math.random()*hand.length)];
@@ -76,7 +76,7 @@ return hand[Math.floor(Math.random()*hand.length)];
 function checkWin(hand, melds) {
 // Total tiles should be 14: hand tiles + (3 per meld, 4 per kong)
 const meldCount = melds ? melds.length : 0;
-const meldTiles = melds ? melds.reduce((sum,m)=>sum+(m.type===“Kong”?4:3),0) : 0;
+const meldTiles = melds ? melds.reduce((sum,m)=>sum+(m.type==="Kong"?4:3),0) : 0;
 const total = hand.length + meldTiles;
 
 // With melds, remaining hand must form (4 - meldCount) sets + 1 pair
@@ -84,7 +84,7 @@ const total = hand.length + meldTiles;
 const setsNeeded = 4 - meldCount;
 
 // Hand size should be setsNeeded*3 + 2 (for the pair)
-// But with kong it’s setsNeeded*3 + 2, and kong melds took 4 tiles
+// But with kong it's setsNeeded*3 + 2, and kong melds took 4 tiles
 const expectedHandSize = setsNeeded * 3 + 2;
 if(hand.length !== expectedHandSize) return false;
 
@@ -105,8 +105,8 @@ const keys = Object.keys(freq).filter(k=>freq[k]>0);
 if (!keys.length) return true;
 const k = keys[0];
 if (freq[k]>=3) { const f={…freq}; f[k]-=3; if(trySets(f)) return true; }
-const [suit,rs] = k.split(”-”); const rank=parseInt(rs);
-if (!isNaN(rank) && [“wan”,“tong”,“tiao”].includes(suit)) {
+const [suit,rs] = k.split("-"); const rank=parseInt(rs);
+if (!isNaN(rank) && ["wan","tong","tiao"].includes(suit)) {
 const k2=`${suit}-${rank+1}`, k3=`${suit}-${rank+2}`;
 if ((freq[k2]||0)>=1 && (freq[k3]||0)>=1) {
 const f={…freq}; f[k]-=1; f[k2]-=1; f[k3]-=1;
@@ -123,25 +123,25 @@ const tKey = `${discardedTile.suit}-${discardedTile.rank}`;
 const counts = {};
 hand.forEach(t => { const k=`${t.suit}-${t.rank}`; counts[k]=(counts[k]||0)+1; });
 
-if ((counts[tKey]||0) >= 2) options.push(“pung”);
-if ((counts[tKey]||0) >= 3) options.push(“kong”);
-if (discardedTile.type === “suit”) {
+if ((counts[tKey]||0) >= 2) options.push("pung");
+if ((counts[tKey]||0) >= 3) options.push("kong");
+if (discardedTile.type === "suit") {
 const r = discardedTile.rank;
 const s = discardedTile.suit;
-if ((counts[`${s}-${r-2}`]||0)>=1 && (counts[`${s}-${r-1}`]||0)>=1) options.push(“chow”);
-if ((counts[`${s}-${r-1}`]||0)>=1 && (counts[`${s}-${r+1}`]||0)>=1) { if(!options.includes(“chow”)) options.push(“chow”); }
-if ((counts[`${s}-${r+1}`]||0)>=1 && (counts[`${s}-${r+2}`]||0)>=1) { if(!options.includes(“chow”)) options.push(“chow”); }
+if ((counts[`${s}-${r-2}`]||0)>=1 && (counts[`${s}-${r-1}`]||0)>=1) options.push("chow");
+if ((counts[`${s}-${r-1}`]||0)>=1 && (counts[`${s}-${r+1}`]||0)>=1) { if(!options.includes("chow")) options.push("chow"); }
+if ((counts[`${s}-${r+1}`]||0)>=1 && (counts[`${s}-${r+2}`]||0)>=1) { if(!options.includes("chow")) options.push("chow"); }
 }
 // Win check — account for exposed melds
 const testHand = […hand, discardedTile];
-if (checkWin(testHand, melds)) options.push(“win”);
+if (checkWin(testHand, melds)) options.push("win");
 
 return options;
 }
 
 // For chow: find which sequences are possible and pick tiles
 function getChowCombos(hand, discardedTile) {
-if (discardedTile.type !== “suit”) return [];
+if (discardedTile.type !== "suit") return [];
 const r = discardedTile.rank;
 const s = discardedTile.suit;
 const combos = [];
@@ -172,7 +172,7 @@ if(count>=3) { value+=40; }
 else if(count>=2) { value+=25; }
 
 // Check adjacency for suit tiles (sequence/chow potential)
-if(tile.type===“suit”) {
+if(tile.type==="suit") {
 const s=tile.suit, r=tile.rank;
 const has = (rank)=> rank>=1 && rank<=9 && (counts[`${s}-${rank}`]||0)>0;
 
@@ -202,10 +202,10 @@ if(count===1 && !hasNeighbor) value-=8;
 }
 
 // Honor tiles
-if(tile.type===“wind”||tile.type===“dragon”) {
+if(tile.type==="wind"||tile.type==="dragon") {
 if(count===1) value-=8; // isolated honor — can only become pung, hard without draws
-if(tile.type===“dragon”&&count>=2) value+=15; // dragon pairs have high fan potential
-if(tile.type===“wind”&&count>=2) value+=10; // wind pairs useful
+if(tile.type==="dragon"&&count>=2) value+=15; // dragon pairs have high fan potential
+if(tile.type==="wind"&&count>=2) value+=10; // wind pairs useful
 }
 
 return { tile, value, count };
@@ -230,13 +230,13 @@ const tileName = (t) => t.en;
 let hint = `Consider discarding ${tileName(worst.tile)}`;
 
 // Explain why
-if(worst.tile.type===“wind”||worst.tile.type===“dragon”) {
+if(worst.tile.type==="wind"||worst.tile.type==="dragon") {
 if(worst.count===1) {
 hint += ` — isolated honor tile, no pair to build toward a pung.`;
 } else {
 hint += ` — least useful tile in your hand.`;
 }
-} else if(worst.tile.type===“suit”) {
+} else if(worst.tile.type==="suit") {
 const s=worst.tile.suit, r=worst.tile.rank;
 const has=(rank)=>rank>=1&&rank<=9&&hand.some(t=>t.suit===s&&t.rank===rank&&t.id!==worst.tile.id);
 const hasAdj = has(r-1)||has(r+1);
@@ -269,18 +269,18 @@ const meldCount = melds.length;
 const setsNeeded = 4 - meldCount;
 const tileName = discardedTile.en;
 
-if(callOptions.includes(“win”)) {
+if(callOptions.includes("win")) {
 return `🎯 You can WIN with ${tileName}! Take it!`;
 }
 
-if(callOptions.includes(“kong”)) {
+if(callOptions.includes("kong")) {
 hints.push(`Kong the ${tileName} — you have 3 in hand. Gives a bonus draw but fully exposes the set.`);
 }
 
-if(callOptions.includes(“pung”)) {
-if(discardedTile.type===“dragon”) {
+if(callOptions.includes("pung")) {
+if(discardedTile.type==="dragon") {
 hints.push(`Pung the ${tileName}! Dragon pungs earn fan points and bring you closer to winning.`);
-} else if(discardedTile.type===“wind”) {
+} else if(discardedTile.type==="wind") {
 hints.push(`Pung the ${tileName}. Wind pungs can earn fan if it matches your seat or prevailing wind.`);
 } else {
 if(setsNeeded<=2) {
@@ -291,17 +291,17 @@ hints.push(`Pung ${tileName} is available, but you still need ${setsNeeded} sets
 }
 }
 
-if(callOptions.includes(“chow”)) {
+if(callOptions.includes("chow")) {
 // Show what sequences are possible
-if(discardedTile.type===“suit”) {
+if(discardedTile.type==="suit") {
 const r=discardedTile.rank, s=discardedTile.suit;
-const suitName={wan:“Characters”,tong:“Dots”,tiao:“Bamboo”}[s];
+const suitName={wan:"Characters",tong:"Dots",tiao:"Bamboo"}[s];
 const has=(rank)=>hand.some(t=>t.suit===s&&t.rank===rank);
 const seqs=[];
 if(r>=3&&has(r-2)&&has(r-1)) seqs.push(`${r-2}-${r-1}-${r}`);
 if(r>=2&&r<=8&&has(r-1)&&has(r+1)) seqs.push(`${r-1}-${r}-${r+1}`);
 if(r<=7&&has(r+1)&&has(r+2)) seqs.push(`${r}-${r+1}-${r+2}`);
-const seqStr = seqs.map(s=>`${s} ${suitName}`).join(” or “);
+const seqStr = seqs.map(s=>`${s} ${suitName}`).join(" or ");
 if(setsNeeded<=2) {
 hints.push(`Chow to form ${seqStr} — you only need ${setsNeeded} more set${setsNeeded>1?"s":""}.`);
 } else {
@@ -310,20 +310,20 @@ hints.push(`Chow available: ${seqStr}. Useful but exposes tiles early.`);
 }
 }
 
-if(!callOptions.some(o=>[“pung”,“kong”,“chow”,“win”].includes(o))) {
-return “No calls available — draw from the wall.”;
+if(!callOptions.some(o=>["pung","kong","chow","win"].includes(o))) {
+return "No calls available — draw from the wall.";
 }
 
 if(meldCount>=2 && hints.length>0) {
-hints.push(“You already have exposed melds — another call pushes toward a win but gives opponents more info.”);
+hints.push("You already have exposed melds — another call pushes toward a win but gives opponents more info.");
 }
 
-return hints.join(” “);
+return hints.join(" ");
 }
 
-const BOT_NAMES = [“East Bot”, “South Bot”, “West Bot”];
-const SEAT_LABELS = [“You (East)”, “South”, “West”, “North”];
-const SEAT_WINDS = [“東”, “南”, “西”, “北”];
+const BOT_NAMES = ["East Bot", "South Bot", "West Bot"];
+const SEAT_LABELS = ["You (East)", "South", "West", "North"];
+const SEAT_WINDS = ["東", "南", "西", "北"];
 
 // ─── SVG Tile Renderers ───
 
@@ -359,9 +359,9 @@ return (
 <ellipse cx={s*.5} cy={s*.38} rx={s*.16} ry={s*.22} fill="#388e3c" stroke="#1b5e20" strokeWidth={0.8}/>
 <ellipse cx={s*.5} cy={s*.26} rx={s*.09} ry={s*.08} fill="#43a047" stroke="#1b5e20" strokeWidth={0.5}/>
 <circle cx={s*.47} cy={s*.24} r={s*.018} fill="#111"/>
-<polygon points={`${s*.57},${s*.25} ${s*.66},${s*.24} ${s*.57},${s*.28}`} fill=”#c0392b”/>
-<path d={`M${s*.36},${s*.4}Q${s*.18},${s*.3} ${s*.22},${s*.5}`} fill=“none” stroke=”#2e7d32” strokeWidth={1.5}/>
-<path d={`M${s*.64},${s*.4}Q${s*.82},${s*.3} ${s*.78},${s*.5}`} fill=“none” stroke=”#2e7d32” strokeWidth={1.5}/>
+<polygon points={`${s*.57},${s*.25} ${s*.66},${s*.24} ${s*.57},${s*.28}`} fill="#c0392b"/>
+<path d={`M${s*.36},${s*.4}Q${s*.18},${s*.3} ${s*.22},${s*.5}`} fill="none" stroke="#2e7d32" strokeWidth={1.5}/>
+<path d={`M${s*.64},${s*.4}Q${s*.82},${s*.3} ${s*.78},${s*.5}`} fill="none" stroke="#2e7d32" strokeWidth={1.5}/>
 <line x1={s*.45} y1={s*.58} x2={s*.42} y2={s*.76} stroke="#6d4c41" strokeWidth={0.8}/>
 <line x1={s*.55} y1={s*.58} x2={s*.58} y2={s*.76} stroke="#6d4c41" strokeWidth={0.8}/>
 </svg>
@@ -377,7 +377,7 @@ const ry=rows===1?s*0.14:s*0.08+row*(stickH+s*0.06);
 for(let col=0;col<cr;col++){
 const x=rx+col*(stickW+gap); const g=idx%2===0;
 sticks.push(<g key={idx}><rect x={x} y={ry} width={stickW} height={stickH} rx={stickW/2}
-fill={g?”#2e7d32”:”#c0392b”} stroke={g?”#1b5e20”:”#922b21”} strokeWidth={0.6}/>
+fill={g?"#2e7d32":"#c0392b"} stroke={g?"#1b5e20":"#922b21"} strokeWidth={0.6}/>
 <line x1={x+stickW*.2} y1={ry+stickH*.33} x2={x+stickW*.8} y2={ry+stickH*.33} stroke="rgba(255,255,255,0.3)" strokeWidth={0.5}/>
 <line x1={x+stickW*.2} y1={ry+stickH*.5} x2={x+stickW*.8} y2={ry+stickH*.5} stroke="rgba(255,255,255,0.3)" strokeWidth={0.5}/>
 <line x1={x+stickW*.2} y1={ry+stickH*.67} x2={x+stickW*.8} y2={ry+stickH*.67} stroke="rgba(255,255,255,0.3)" strokeWidth={0.5}/>
@@ -390,7 +390,7 @@ return <svg width={s} height={s} viewBox={`0 0 ${s} ${s}`}>{sticks}</svg>;
 // Characters: Chinese numeral + 萬 + small number cheat label
 function CharacterTile({ rank, size }) {
 const s=size;
-const numCn=[“一”,“二”,“三”,“四”,“五”,“六”,“七”,“八”,“九”][rank-1];
+const numCn=["一","二","三","四","五","六","七","八","九"][rank-1];
 return (
 <svg width={s} height={s} viewBox={`0 0 ${s} ${s}`}>
 <text x={s*.5} y={s*.35} textAnchor="middle" dominantBaseline="central"
@@ -406,8 +406,8 @@ fontSize={s*0.18} fontWeight="700" fill="#888" fontFamily="'DM Sans',sans-serif"
 // Winds: Chinese character + small E/S/W/N cheat label
 function WindTile({ windKey, size }) {
 const s=size;
-const chars={east:“東”,south:“南”,west:“西”,north:“北”};
-const abbrs={east:“E”,south:“S”,west:“W”,north:“N”};
+const chars={east:"東",south:"南",west:"西",north:"北"};
+const abbrs={east:"E",south:"S",west:"W",north:"N"};
 return (
 <svg width={s} height={s} viewBox={`0 0 ${s} ${s}`}>
 <text x={s*.5} y={s*.5} textAnchor="middle" dominantBaseline="central"
@@ -422,11 +422,11 @@ fontSize={s*0.17} fontWeight="700" fill="#888" fontFamily="'DM Sans',sans-serif"
 // Dragons: Chinese character + small Red/Grn/Wht cheat label
 function DragonTile({ dragonKey, size }) {
 const s=size;
-const abbrs={red:“Red”,green:“Grn”,white:“Wht”};
+const abbrs={red:"Red",green:"Grn",white:"Wht"};
 const label = <text x={s*.88} y={s*.14} textAnchor="end" dominantBaseline="central"
 fontSize={s*0.14} fontWeight="700" fill="#888" fontFamily="'DM Sans',sans-serif">{abbrs[dragonKey]}</text>;
 
-if (dragonKey===“red”) return (
+if (dragonKey==="red") return (
 <svg width={s} height={s} viewBox={`0 0 ${s} ${s}`}>
 <rect x={s*.15} y={s*.12} width={s*.7} height={s*.76} rx={3} fill="none" stroke="#c62828" strokeWidth={1.5}/>
 <text x={s*.5} y={s*.52} textAnchor="middle" dominantBaseline="central"
@@ -434,7 +434,7 @@ fontSize={s*.5} fontWeight="900" fill="#c62828" fontFamily="'Noto Serif SC',seri
 {label}
 </svg>
 );
-if (dragonKey===“green”) return (
+if (dragonKey==="green") return (
 <svg width={s} height={s} viewBox={`0 0 ${s} ${s}`}>
 <text x={s*.5} y={s*.52} textAnchor="middle" dominantBaseline="central"
 fontSize={s*.55} fontWeight="900" fill="#2e7d32" fontFamily="'Noto Serif SC',serif" stroke="#1b5e20" strokeWidth={0.4}>發</text>
@@ -451,11 +451,11 @@ return (
 }
 
 function TileFace({tile,size}) {
-if(tile.suit===“tong”) return <DotPattern count={tile.rank} size={size}/>;
-if(tile.suit===“tiao”) return <BambooPattern count={tile.rank} size={size}/>;
-if(tile.suit===“wan”) return <CharacterTile rank={tile.rank} size={size}/>;
-if(tile.type===“wind”) return <WindTile windKey={tile.rank} size={size}/>;
-if(tile.type===“dragon”) return <DragonTile dragonKey={tile.rank} size={size}/>;
+if(tile.suit==="tong") return <DotPattern count={tile.rank} size={size}/>;
+if(tile.suit==="tiao") return <BambooPattern count={tile.rank} size={size}/>;
+if(tile.suit==="wan") return <CharacterTile rank={tile.rank} size={size}/>;
+if(tile.type==="wind") return <WindTile windKey={tile.rank} size={size}/>;
+if(tile.type==="dragon") return <DragonTile dragonKey={tile.rank} size={size}/>;
 return null;
 }
 
@@ -474,55 +474,55 @@ setFlipTooltip(tooltipBelow||rect.top<40);
 },[hovered,tooltipBelow]);
 
 if(faceDown) return (
-<div style={{width:tW,height:tH,background:“linear-gradient(145deg,#2d6a4f,#1b4332)”,borderRadius:5,
-border:“1px solid #145a32”,display:“inline-flex”,alignItems:“center”,justifyContent:“center”,margin:1,
-boxShadow:“1px 2px 4px rgba(0,0,0,0.2)”}}>
-<span style={{color:”#a3d9b1”,fontSize:small?14:18,fontWeight:700}}>🀄</span>
+<div style={{width:tW,height:tH,background:"linear-gradient(145deg,#2d6a4f,#1b4332)",borderRadius:5,
+border:"1px solid #145a32",display:"inline-flex",alignItems:"center",justifyContent:"center",margin:1,
+boxShadow:"1px 2px 4px rgba(0,0,0,0.2)"}}>
+<span style={{color:"#a3d9b1",fontSize:small?14:18,fontWeight:700}}>🀄</span>
 </div>
 );
 
 const getBg = () => {
-if(selected) return “linear-gradient(145deg,#fef9c3,#fde68a)”;
-if(isDrawn) return “linear-gradient(145deg,#e8f5e9,#c8e6c9)”;
-if(highlight) return “linear-gradient(145deg,#fce4ec,#f8bbd0)”;
-return “linear-gradient(145deg,#fffff8,#ebe6d5)”;
+if(selected) return "linear-gradient(145deg,#fef9c3,#fde68a)";
+if(isDrawn) return "linear-gradient(145deg,#e8f5e9,#c8e6c9)";
+if(highlight) return "linear-gradient(145deg,#fce4ec,#f8bbd0)";
+return "linear-gradient(145deg,#fffff8,#ebe6d5)";
 };
 const getBorder = () => {
-if(selected) return “2px solid #d97706”;
-if(isDrawn) return “2px solid #43a047”;
-if(highlight) return “2px solid #e91e63”;
-return “1.5px solid #a89e8a”;
+if(selected) return "2px solid #d97706";
+if(isDrawn) return "2px solid #43a047";
+if(highlight) return "2px solid #e91e63";
+return "1.5px solid #a89e8a";
 };
 const getShadow = () => {
-if(selected) return “0 0 10px rgba(217,119,6,0.5)”;
-if(isDrawn) return “0 0 10px rgba(67,160,71,0.5)”;
-if(highlight) return “0 0 8px rgba(233,30,99,0.3)”;
-return “1px 2px 5px rgba(0,0,0,0.2),inset 0 1px 0 rgba(255,255,255,0.7)”;
+if(selected) return "0 0 10px rgba(217,119,6,0.5)";
+if(isDrawn) return "0 0 10px rgba(67,160,71,0.5)";
+if(highlight) return "0 0 8px rgba(233,30,99,0.3)";
+return "1px 2px 5px rgba(0,0,0,0.2),inset 0 1px 0 rgba(255,255,255,0.7)";
 };
 
 return (
 <div ref={ref} onClick={onClick} onMouseEnter={()=>setHovered(true)} onMouseLeave={()=>setHovered(false)}
 style={{width:tW,height:tH,
 background:getBg(),borderRadius:5,border:getBorder(),
-display:“inline-flex”,alignItems:“center”,justifyContent:“center”,
-cursor:onClick?“pointer”:“default”,margin:1,
+display:"inline-flex",alignItems:"center",justifyContent:"center",
+cursor:onClick?"pointer":"default",margin:1,
 boxShadow:getShadow(),
-transition:“all 0.15s”,transform:selected?“translateY(-6px)”:“none”,userSelect:“none”,position:“relative”,
-overflow:“visible”,
+transition:"all 0.15s",transform:selected?"translateY(-6px)":"none",userSelect:"none",position:"relative",
+overflow:"visible",
 }}>
 <TileFace tile={tile} size={fs}/>
-{isDrawn&&!selected&&<div style={{position:“absolute”,top:-6,right:-4,background:”#43a047”,color:”#fff”,
-fontSize:7,fontWeight:700,padding:“1px 3px”,borderRadius:3,fontFamily:”‘DM Sans’,sans-serif”,
-boxShadow:“0 1px 3px rgba(0,0,0,0.3)”}}>NEW</div>}
-{hovered&&(<div style={{position:“absolute”,
+{isDrawn&&!selected&&<div style={{position:"absolute",top:-6,right:-4,background:"#43a047",color:"#fff",
+fontSize:7,fontWeight:700,padding:"1px 3px",borderRadius:3,fontFamily:"'DM Sans',sans-serif",
+boxShadow:"0 1px 3px rgba(0,0,0,0.3)"}}>NEW</div>}
+{hovered&&(<div style={{position:"absolute",
 …(flipTooltip
-? {top:“calc(100% + 5px)”}
-: {bottom:“calc(100% + 5px)”}),
-left:“50%”,transform:“translateX(-50%)”,
-background:“rgba(20,20,20,0.94)”,color:”#fff”,padding:“4px 8px”,borderRadius:5,fontSize:11,
-whiteSpace:“nowrap”,zIndex:200,pointerEvents:“none”,fontFamily:”‘DM Sans’,sans-serif”,
-boxShadow:“0 2px 10px rgba(0,0,0,0.4)”}}>
-<span style={{fontFamily:”‘Noto Serif SC’,serif”,marginRight:4}}>{tile.cn}</span>
+? {top:"calc(100% + 5px)"}
+: {bottom:"calc(100% + 5px)"}),
+left:"50%",transform:"translateX(-50%)",
+background:"rgba(20,20,20,0.94)",color:"#fff",padding:"4px 8px",borderRadius:5,fontSize:11,
+whiteSpace:"nowrap",zIndex:200,pointerEvents:"none",fontFamily:"'DM Sans',sans-serif",
+boxShadow:"0 2px 10px rgba(0,0,0,0.4)"}}>
+<span style={{fontFamily:"'Noto Serif SC',serif",marginRight:4}}>{tile.cn}</span>
 <span style={{opacity:0.8}}>{tile.en}</span>
 </div>)}
 </div>
@@ -532,9 +532,9 @@ boxShadow:“0 2px 10px rgba(0,0,0,0.4)”}}>
 // ─── Discard Pool ───
 function DiscardPool({discards,lastDiscard}) {
 return (
-<div style={{display:“flex”,flexWrap:“wrap”,gap:2,padding:“12px 8px 8px”,background:“rgba(255,255,255,0.5)”,
-borderRadius:8,minHeight:56,maxHeight:200,overflowY:“auto”,overflowX:“visible”,border:“1px solid #ddd”,position:“relative”}}>
-{!discards.length&&<span style={{color:”#999”,fontSize:12,fontStyle:“italic”,padding:4}}>No discards yet</span>}
+<div style={{display:"flex",flexWrap:"wrap",gap:2,padding:"12px 8px 8px",background:"rgba(255,255,255,0.5)",
+borderRadius:8,minHeight:56,maxHeight:200,overflowY:"auto",overflowX:"visible",border:"1px solid #ddd",position:"relative"}}>
+{!discards.length&&<span style={{color:"#999",fontSize:12,fontStyle:"italic",padding:4}}>No discards yet</span>}
 {discards.map((d,i)=><Tile key={`d-${d.tile.id}-${i}`} tile={d.tile} small tooltipBelow highlight={lastDiscard&&d.tile.id===lastDiscard.id}/>)}
 </div>
 );
@@ -544,12 +544,12 @@ borderRadius:8,minHeight:56,maxHeight:200,overflowY:“auto”,overflowX:“visi
 function ExposedMelds({melds}) {
 if(!melds||!melds.length) return null;
 return (
-<div style={{display:“flex”,gap:6,flexWrap:“wrap”,marginTop:4}}>
+<div style={{display:"flex",gap:6,flexWrap:"wrap",marginTop:4}}>
 {melds.map((meld,i)=>(
-<div key={i} style={{display:“flex”,gap:1,padding:“3px 4px”,background:“rgba(255,255,255,0.12)”,
-borderRadius:5,border:“1px solid rgba(255,255,255,0.15)”}}>
-<span style={{fontSize:8,color:”#a3d9b1”,position:“relative”,top:-2,marginRight:2,fontWeight:700,
-fontFamily:”‘DM Sans’,sans-serif”}}>{meld.type}</span>
+<div key={i} style={{display:"flex",gap:1,padding:"3px 4px",background:"rgba(255,255,255,0.12)",
+borderRadius:5,border:"1px solid rgba(255,255,255,0.15)"}}>
+<span style={{fontSize:8,color:"#a3d9b1",position:"relative",top:-2,marginRight:2,fontWeight:700,
+fontFamily:"'DM Sans',sans-serif"}}>{meld.type}</span>
 {meld.tiles.map(t=><Tile key={t.id} tile={t} small/>)}
 </div>
 ))}
@@ -560,61 +560,61 @@ fontFamily:”‘DM Sans’,sans-serif”}}>{meld.type}</span>
 // ─── Tile Legend ───
 function TileLegend({show,onToggle}) {
 if(!show) return (
-<button onClick={onToggle} style={{padding:“6px 14px”,borderRadius:6,border:“1px solid #8d6e63”,
-background:“linear-gradient(145deg,#efebe9,#d7ccc8)”,color:”#4e342e”,cursor:“pointer”,fontSize:12,
-fontFamily:”‘DM Sans’,sans-serif”,fontWeight:600}}>📖 Tile Reference</button>
+<button onClick={onToggle} style={{padding:"6px 14px",borderRadius:6,border:"1px solid #8d6e63",
+background:"linear-gradient(145deg,#efebe9,#d7ccc8)",color:"#4e342e",cursor:"pointer",fontSize:12,
+fontFamily:"'DM Sans',sans-serif",fontWeight:600}}>📖 Tile Reference</button>
 );
 return (
-<div style={{background:“linear-gradient(145deg,#faf7f2,#f0ead6)”,borderRadius:10,padding:14,
-border:“1px solid #c9b99a”,maxHeight:400,overflowY:“auto”}}>
-<div style={{display:“flex”,justifyContent:“space-between”,alignItems:“center”,marginBottom:10}}>
-<span style={{fontWeight:700,fontSize:14,fontFamily:”‘DM Sans’,sans-serif”,color:”#3e2723”}}>📖 Tile Reference</span>
-<button onClick={onToggle} style={{background:“none”,border:“none”,cursor:“pointer”,fontSize:16,color:”#888”}}>✕</button>
+<div style={{background:"linear-gradient(145deg,#faf7f2,#f0ead6)",borderRadius:10,padding:14,
+border:"1px solid #c9b99a",maxHeight:400,overflowY:"auto"}}>
+<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+<span style={{fontWeight:700,fontSize:14,fontFamily:"'DM Sans',sans-serif",color:"#3e2723"}}>📖 Tile Reference</span>
+<button onClick={onToggle} style={{background:"none",border:"none",cursor:"pointer",fontSize:16,color:"#888"}}>✕</button>
 </div>
 {SUITS.map(suit=>(
 <div key={suit.key} style={{marginBottom:10}}>
-<div style={{fontSize:11,fontWeight:700,color:suit.color,marginBottom:4,fontFamily:”‘DM Sans’,sans-serif”,
-textTransform:“uppercase”,letterSpacing:“0.05em”}}>{suit.cn} {suit.en}</div>
-<div style={{display:“flex”,flexWrap:“wrap”,gap:3}}>
+<div style={{fontSize:11,fontWeight:700,color:suit.color,marginBottom:4,fontFamily:"'DM Sans',sans-serif",
+textTransform:"uppercase",letterSpacing:"0.05em"}}>{suit.cn} {suit.en}</div>
+<div style={{display:"flex",flexWrap:"wrap",gap:3}}>
 {RANKS.map(r=>{
-const t={type:“suit”,suit:suit.key,rank:r.n,cn:`${r.cn}${suit.cn}`,en:`${r.n} ${suit.en}`,color:suit.color};
-return (<div key={r.n} style={{display:“flex”,flexDirection:“column”,alignItems:“center”,
-background:”#fff”,borderRadius:5,padding:3,border:“1px solid #ddd”,minWidth:36}}>
-<TileFace tile={t} size={28}/><span style={{fontSize:8,color:”#555”,marginTop:1,fontWeight:600}}>{r.n}</span>
+const t={type:"suit",suit:suit.key,rank:r.n,cn:`${r.cn}${suit.cn}`,en:`${r.n} ${suit.en}`,color:suit.color};
+return (<div key={r.n} style={{display:"flex",flexDirection:"column",alignItems:"center",
+background:"#fff",borderRadius:5,padding:3,border:"1px solid #ddd",minWidth:36}}>
+<TileFace tile={t} size={28}/><span style={{fontSize:8,color:"#555",marginTop:1,fontWeight:600}}>{r.n}</span>
 </div>);
 })}
 </div>
 </div>
 ))}
 <div style={{marginBottom:10}}>
-<div style={{fontSize:11,fontWeight:700,color:”#1a237e”,marginBottom:4,fontFamily:”‘DM Sans’,sans-serif”,
-textTransform:“uppercase”,letterSpacing:“0.05em”}}>Winds</div>
-<div style={{display:“flex”,gap:3}}>
+<div style={{fontSize:11,fontWeight:700,color:"#1a237e",marginBottom:4,fontFamily:"'DM Sans',sans-serif",
+textTransform:"uppercase",letterSpacing:"0.05em"}}>Winds</div>
+<div style={{display:"flex",gap:3}}>
 {WINDS.map(w=>{
-const t={type:“wind”,suit:“wind”,rank:w.key,cn:w.cn,en:`${w.en} Wind`};
-return (<div key={w.key} style={{display:“flex”,flexDirection:“column”,alignItems:“center”,
-background:”#fff”,borderRadius:5,padding:3,border:“1px solid #ddd”}}>
-<TileFace tile={t} size={28}/><span style={{fontSize:8,color:”#555”,marginTop:1,fontWeight:600}}>{w.en}</span>
+const t={type:"wind",suit:"wind",rank:w.key,cn:w.cn,en:`${w.en} Wind`};
+return (<div key={w.key} style={{display:"flex",flexDirection:"column",alignItems:"center",
+background:"#fff",borderRadius:5,padding:3,border:"1px solid #ddd"}}>
+<TileFace tile={t} size={28}/><span style={{fontSize:8,color:"#555",marginTop:1,fontWeight:600}}>{w.en}</span>
 </div>);
 })}
 </div>
 </div>
 <div style={{marginBottom:10}}>
-<div style={{fontSize:11,fontWeight:700,color:”#333”,marginBottom:4,fontFamily:”‘DM Sans’,sans-serif”,
-textTransform:“uppercase”,letterSpacing:“0.05em”}}>Dragons</div>
-<div style={{display:“flex”,gap:3}}>
+<div style={{fontSize:11,fontWeight:700,color:"#333",marginBottom:4,fontFamily:"'DM Sans',sans-serif",
+textTransform:"uppercase",letterSpacing:"0.05em"}}>Dragons</div>
+<div style={{display:"flex",gap:3}}>
 {DRAGONS.map(d=>{
-const t={type:“dragon”,suit:“dragon”,rank:d.key,cn:d.cn,en:`${d.en} Dragon`,color:d.color};
-return (<div key={d.key} style={{display:“flex”,flexDirection:“column”,alignItems:“center”,
-background:”#fff”,borderRadius:5,padding:3,border:“1px solid #ddd”}}>
-<TileFace tile={t} size={28}/><span style={{fontSize:8,color:”#555”,marginTop:1,fontWeight:600}}>{d.en}</span>
+const t={type:"dragon",suit:"dragon",rank:d.key,cn:d.cn,en:`${d.en} Dragon`,color:d.color};
+return (<div key={d.key} style={{display:"flex",flexDirection:"column",alignItems:"center",
+background:"#fff",borderRadius:5,padding:3,border:"1px solid #ddd"}}>
+<TileFace tile={t} size={28}/><span style={{fontSize:8,color:"#555",marginTop:1,fontWeight:600}}>{d.en}</span>
 </div>);
 })}
 </div>
 </div>
-<div style={{padding:8,background:”#fff8e1”,borderRadius:6,border:“1px solid #ffe082”}}>
-<div style={{fontSize:11,fontWeight:700,color:”#4e342e”,marginBottom:4,fontFamily:”‘DM Sans’,sans-serif”}}>Quick Terms</div>
-<div style={{fontSize:10,color:”#555”,lineHeight:1.6,fontFamily:”‘DM Sans’,sans-serif”}}>
+<div style={{padding:8,background:"#fff8e1",borderRadius:6,border:"1px solid #ffe082"}}>
+<div style={{fontSize:11,fontWeight:700,color:"#4e342e",marginBottom:4,fontFamily:"'DM Sans',sans-serif"}}>Quick Terms</div>
+<div style={{fontSize:10,color:"#555",lineHeight:1.6,fontFamily:"'DM Sans',sans-serif"}}>
 <b>Chow</b> (吃) — 3 consecutive, same suit<br/>
 <b>Pung</b> (碰) — 3 identical tiles<br/>
 <b>Kong</b> (槓) — 4 identical tiles<br/>
@@ -629,30 +629,30 @@ background:”#fff”,borderRadius:5,padding:3,border:“1px solid #ddd”}}>
 // ─── Call Action Buttons ───
 function CallButtons({options, onCall, onSkip, lastDiscard}) {
 const btnStyle = (bg, shadow) => ({
-padding:“7px 16px”,borderRadius:7,border:“none”,color:”#fff”,cursor:“pointer”,
-fontSize:13,fontWeight:700,fontFamily:”‘DM Sans’,sans-serif”,
+padding:"7px 16px",borderRadius:7,border:"none",color:"#fff",cursor:"pointer",
+fontSize:13,fontWeight:700,fontFamily:"'DM Sans',sans-serif",
 background:bg,boxShadow:`0 2px 8px ${shadow}`,
 });
-const hasRealCalls = options.some(o=>o!==“none”);
+const hasRealCalls = options.some(o=>o!=="none");
 return (
-<div style={{textAlign:“center”,padding:“10px 8px”,margin:“0 0 8px”,
-background:hasRealCalls?“rgba(255,193,7,0.12)”:“rgba(255,255,255,0.08)”,
-borderRadius:8,border:hasRealCalls?“1px solid rgba(255,193,7,0.3)”:“1px solid rgba(255,255,255,0.15)”}}>
-<div style={{fontSize:12,color:”#fef3c7”,marginBottom:4,fontWeight:600}}>
-Last discard: <span style={{fontFamily:”‘Noto Serif SC’,serif”,fontSize:16}}>{lastDiscard.cn}</span> ({lastDiscard.en})
+<div style={{textAlign:"center",padding:"10px 8px",margin:"0 0 8px",
+background:hasRealCalls?"rgba(255,193,7,0.12)":"rgba(255,255,255,0.08)",
+borderRadius:8,border:hasRealCalls?"1px solid rgba(255,193,7,0.3)":"1px solid rgba(255,255,255,0.15)"}}>
+<div style={{fontSize:12,color:"#fef3c7",marginBottom:4,fontWeight:600}}>
+Last discard: <span style={{fontFamily:"'Noto Serif SC',serif",fontSize:16}}>{lastDiscard.cn}</span> ({lastDiscard.en})
 </div>
-<div style={{display:“flex”,alignItems:“center”,justifyContent:“center”,marginBottom:8}}>
+<div style={{display:"flex",alignItems:"center",justifyContent:"center",marginBottom:8}}>
 <Tile tile={lastDiscard} small highlight/>
 </div>
 {hasRealCalls&&(
-<div style={{fontSize:11,color:”#ffcc80”,marginBottom:6}}>You can claim this tile:</div>
+<div style={{fontSize:11,color:"#ffcc80",marginBottom:6}}>You can claim this tile:</div>
 )}
-<div style={{display:“flex”,gap:8,justifyContent:“center”,flexWrap:“wrap”}}>
-{options.includes(“win”)&&<button onClick={()=>onCall(“win”)} style={btnStyle(“linear-gradient(145deg,#ff6f00,#e65100)”,“rgba(230,81,0,0.4)”)}>胡 Win</button>}
-{options.includes(“kong”)&&<button onClick={()=>onCall(“kong”)} style={btnStyle(“linear-gradient(145deg,#7b1fa2,#4a148c)”,“rgba(74,20,140,0.4)”)}>槓 Kong</button>}
-{options.includes(“pung”)&&<button onClick={()=>onCall(“pung”)} style={btnStyle(“linear-gradient(145deg,#1565c0,#0d47a1)”,“rgba(13,71,161,0.4)”)}>碰 Pung</button>}
-{options.includes(“chow”)&&<button onClick={()=>onCall(“chow”)} style={btnStyle(“linear-gradient(145deg,#2e7d32,#1b5e20)”,“rgba(27,94,32,0.4)”)}>吃 Chow</button>}
-<button onClick={onSkip} style={btnStyle(“linear-gradient(145deg,#f9a825,#f57f17)”,“rgba(249,168,37,0.3)”)}>
+<div style={{display:"flex",gap:8,justifyContent:"center",flexWrap:"wrap"}}>
+{options.includes("win")&&<button onClick={()=>onCall("win")} style={btnStyle("linear-gradient(145deg,#ff6f00,#e65100)","rgba(230,81,0,0.4)")}>胡 Win</button>}
+{options.includes("kong")&&<button onClick={()=>onCall("kong")} style={btnStyle("linear-gradient(145deg,#7b1fa2,#4a148c)","rgba(74,20,140,0.4)")}>槓 Kong</button>}
+{options.includes("pung")&&<button onClick={()=>onCall("pung")} style={btnStyle("linear-gradient(145deg,#1565c0,#0d47a1)","rgba(13,71,161,0.4)")}>碰 Pung</button>}
+{options.includes("chow")&&<button onClick={()=>onCall("chow")} style={btnStyle("linear-gradient(145deg,#2e7d32,#1b5e20)","rgba(27,94,32,0.4)")}>吃 Chow</button>}
+<button onClick={onSkip} style={btnStyle("linear-gradient(145deg,#f9a825,#f57f17)","rgba(249,168,37,0.3)")}>
 Draw from Wall
 </button>
 </div>
@@ -663,29 +663,29 @@ Draw from Wall
 // ─── Chow Picker ───
 function ChowPicker({combos, discardedTile, onPick, onCancel}) {
 return (
-<div style={{textAlign:“center”,padding:“10px 8px”,margin:“0 0 8px”,
-background:“rgba(46,125,50,0.15)”,borderRadius:8,border:“1px solid rgba(46,125,50,0.3)”}}>
-<div style={{fontSize:12,color:”#a5d6a7”,marginBottom:8,fontWeight:600}}>Choose your chow combination:</div>
-<div style={{display:“flex”,gap:8,justifyContent:“center”,flexWrap:“wrap”}}>
+<div style={{textAlign:"center",padding:"10px 8px",margin:"0 0 8px",
+background:"rgba(46,125,50,0.15)",borderRadius:8,border:"1px solid rgba(46,125,50,0.3)"}}>
+<div style={{fontSize:12,color:"#a5d6a7",marginBottom:8,fontWeight:600}}>Choose your chow combination:</div>
+<div style={{display:"flex",gap:8,justifyContent:"center",flexWrap:"wrap"}}>
 {combos.map((combo,i)=>{
 const allThree = sortHand([…combo, discardedTile]);
 return (
-<button key={i} onClick={()=>onPick(combo)} style={{display:“flex”,gap:2,padding:“4px 6px”,
-background:“rgba(255,255,255,0.1)”,borderRadius:6,border:“1px solid rgba(255,255,255,0.2)”,
-cursor:“pointer”,alignItems:“center”}}>
+<button key={i} onClick={()=>onPick(combo)} style={{display:"flex",gap:2,padding:"4px 6px",
+background:"rgba(255,255,255,0.1)",borderRadius:6,border:"1px solid rgba(255,255,255,0.2)",
+cursor:"pointer",alignItems:"center"}}>
 {allThree.map(t=><Tile key={t.id} tile={t} small/>)}
 </button>
 );
 })}
 </div>
-<button onClick={onCancel} style={{marginTop:6,padding:“4px 12px”,borderRadius:5,border:“1px solid #666”,
-background:“transparent”,color:”#aaa”,cursor:“pointer”,fontSize:11,fontFamily:”‘DM Sans’,sans-serif”}}>Cancel</button>
+<button onClick={onCancel} style={{marginTop:6,padding:"4px 12px",borderRadius:5,border:"1px solid #666",
+background:"transparent",color:"#aaa",cursor:"pointer",fontSize:11,fontFamily:"'DM Sans',sans-serif"}}>Cancel</button>
 </div>
 );
 }
 
 // ─── Main Game ───
-const PLAYER_NAMES = [“You”, “East Bot”, “South Bot”, “West Bot”];
+const PLAYER_NAMES = ["You", "East Bot", "South Bot", "West Bot"];
 
 function addLog(prev, playerIdx, action, tile) {
 return […prev.gameLog, {
@@ -705,8 +705,8 @@ for(let i=0;i<13;i++) for(let p=0;p<4;p++) hands[p].push(deck.pop());
 return {
 wall:deck, hands:hands.map(h=>sortHand(h)),
 discards:[[],[],[],[]], melds:[[],[],[],[]],
-currentPlayer:0, phase:“draw”, drawnTile:null,
-message:“Your turn — draw a tile from the wall.”,
+currentPlayer:0, phase:"draw", drawnTile:null,
+message:"Your turn — draw a tile from the wall.",
 lastDiscard:null, lastDiscardPlayer:null,
 winner:null, turnCount:0,
 callOptions:null, chowCombos:null,
@@ -727,17 +727,17 @@ const isPlayerTurn=game.currentPlayer===0;
 
 // Draw
 const drawTile=useCallback(()=>{
-if(game.phase!==“draw”||!isPlayerTurn||game.wall.length===0) return;
+if(game.phase!=="draw"||!isPlayerTurn||game.wall.length===0) return;
 setGame(prev=>{
 const wall=[…prev.wall]; const tile=wall.pop();
 const newHand=sortHand([…prev.hands[0],tile]);
 const hands=prev.hands.map((h,i)=>i===0?newHand:[…h]);
 const isWin=checkWin(newHand,prev.melds[0]);
 return {…prev,wall,hands,drawnTile:tile,
-phase:isWin?“gameover”:“discard”,
-message:isWin?“🎉 You win!”:`Drew ${tile.cn} (${tile.en}). Select a tile to discard.`,
+phase:isWin?"gameover":"discard",
+message:isWin?"🎉 You win!":`Drew ${tile.cn} (${tile.en}). Select a tile to discard.`,
 winner:isWin?0:null, callOptions:null, chowCombos:null, awaitingCall:false,
-gameLog:addLog(prev,0,“Drew”,tile),
+gameLog:addLog(prev,0,"Drew",tile),
 };
 });
 setSelectedTile(null);
@@ -745,7 +745,7 @@ setSelectedTile(null);
 
 // Discard
 const discardTile=useCallback(()=>{
-if(game.phase!==“discard”||!isPlayerTurn||selectedTile===null) return;
+if(game.phase!=="discard"||!isPlayerTurn||selectedTile===null) return;
 setGame(prev=>{
 const hand=[…prev.hands[0]];
 const idx=hand.findIndex(t=>t.id===selectedTile);
@@ -754,11 +754,11 @@ const [discarded]=hand.splice(idx,1);
 const sorted=sortHand(hand);
 const discards=prev.discards.map((d,i)=>i===0?[…d,{tile:discarded,player:0}]:[…d]);
 return {…prev,hands:prev.hands.map((h,i)=>i===0?sorted:[…h]),
-discards,currentPlayer:1,phase:“draw”,drawnTile:null,
+discards,currentPlayer:1,phase:"draw",drawnTile:null,
 lastDiscard:discarded,lastDiscardPlayer:0,
-message:“Bots playing…”,turnCount:prev.turnCount+1,
+message:"Bots playing…",turnCount:prev.turnCount+1,
 callOptions:null,chowCombos:null,awaitingCall:false,
-gameLog:addLog(prev,0,“Discarded”,discarded),
+gameLog:addLog(prev,0,"Discarded",discarded),
 };
 });
 setSelectedTile(null);
@@ -866,19 +866,19 @@ const tile=prev.lastDiscard;
 const hand=[…prev.hands[0]];
 const remaining=sortHand(hand.filter(t=>!combo.find(r=>r.id===t.id)));
 const meldTiles=sortHand([…combo,tile]);
-const newMelds=prev.melds.map((m,i)=>i===0?[…m,{type:“Chow”,tiles:meldTiles}]:[…m]);
+const newMelds=prev.melds.map((m,i)=>i===0?[…m,{type:"Chow",tiles:meldTiles}]:[…m]);
 const isWin=checkWin(remaining,newMelds[0]);
 if(isWin) {
 return {…prev,hands:prev.hands.map((h,i)=>i===0?remaining:[…h]),
-melds:newMelds,phase:“gameover”,winner:0,
-message:“🎉 You win! Chow completed your hand!”,
+melds:newMelds,phase:"gameover",winner:0,
+message:"🎉 You win! Chow completed your hand!",
 discards:prev.discards.map((d,i)=>i===prev.lastDiscardPlayer?d.slice(0,-1):[…d]),
 callOptions:null,chowCombos:null,currentPlayer:0,awaitingCall:false,
 };
 }
 return {…prev,hands:prev.hands.map((h,i)=>i===0?remaining:[…h]),
-melds:newMelds,phase:“discard”,
-message:“Chow! Select a tile to discard.”,
+melds:newMelds,phase:"discard",
+message:"Chow! Select a tile to discard.",
 discards:prev.discards.map((d,i)=>i===prev.lastDiscardPlayer?d.slice(0,-1):[…d]),
 callOptions:null,chowCombos:null,currentPlayer:0,awaitingCall:false,
 };
@@ -889,35 +889,35 @@ const skipCall=useCallback(()=>{
 setGame(prev=>{
 // If this was a mid-round interrupt, resume bot turns from the queued next player
 if(prev.currentPlayer!==0) {
-return {…prev,callOptions:null,chowCombos:null,phase:“draw”,
+return {…prev,callOptions:null,chowCombos:null,phase:"draw",
 awaitingCall:false,lastDiscardPlayer:null};
 }
 // Normal turn skip — let player draw from wall
-return {…prev,callOptions:null,chowCombos:null,phase:“draw”,
+return {…prev,callOptions:null,chowCombos:null,phase:"draw",
 awaitingCall:false,lastDiscardPlayer:null,
-message:“Your turn — draw a tile.”};
+message:"Your turn — draw a tile."};
 });
 },[]);
 
 // Bot turns + call checks
 useEffect(()=>{
-if(game.phase===“gameover”) return;
-// If we’re showing call options or chow picker, wait for player input
+if(game.phase==="gameover") return;
+// If we're showing call options or chow picker, wait for player input
 if(game.callOptions||game.chowCombos) return;
 // If awaiting call resolution, show the options now
 if(game.awaitingCall&&game.lastDiscard) {
 const opts=getCallOptions(game.hands[0],game.lastDiscard,game.melds[0]);
 // Chow only from left neighbor (player 3). Pung/Kong/Win from anyone.
 const fromPlayer=game.lastDiscardPlayer;
-const filtered = fromPlayer===3 ? opts : opts.filter(o=>o!==“chow”);
-// Always show prompt when it’s player’s turn so they see every discard
+const filtered = fromPlayer===3 ? opts : opts.filter(o=>o!=="chow");
+// Always show prompt when it's player's turn so they see every discard
 const isMyTurn = game.currentPlayer===0;
-const toShow = filtered.length>0 ? filtered : (isMyTurn ? [“none”] : []);
+const toShow = filtered.length>0 ? filtered : (isMyTurn ? ["none"] : []);
 if(toShow.length>0) {
 setGame(prev=>({…prev,callOptions:toShow,awaitingCall:false}));
 return;
 }
-// No calls possible and not player’s natural turn — continue bot play
+// No calls possible and not player's natural turn — continue bot play
 setGame(prev=>({…prev,awaitingCall:false,lastDiscardPlayer:null}));
 return;
 }
@@ -1015,8 +1015,8 @@ const allDiscards=game.discards.flat();
 const newGame=()=>{setGame(initGame());setSelectedTile(null);setShowAllDiscards(false);};
 
 return (
-<div style={{minHeight:“100vh”,background:“linear-gradient(160deg,#1b4332 0%,#2d6a4f 40%,#245a3a 100%)”,
-fontFamily:”‘DM Sans’,sans-serif”,padding:“12px 8px”,boxSizing:“border-box”}}>
+<div style={{minHeight:"100vh",background:"linear-gradient(160deg,#1b4332 0%,#2d6a4f 40%,#245a3a 100%)",
+fontFamily:"'DM Sans',sans-serif",padding:"12px 8px",boxSizing:"border-box"}}>
 <link href="https://urldefense.com/v3/__https://fonts.googleapis.com/css2?family=DM*Sans:wght@400;500;600;700&family=Noto*Serif*SC:wght@400;700&display=swap__;Kysr!!L1aKtqoz4WY!YFFEk4uY6xMm2dHLv2ASAtG2p9_yztgU6XeotMchmnaPF8edmRftL-P_qoEPuZ3foHHpz0xDGwluDVR2YEBJFg$ " rel="stylesheet"/>
 
 ```
